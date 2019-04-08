@@ -1,0 +1,38 @@
+{
+  "name": "express-starter",
+  "version": "0.1.0",
+  "description": "A starting template for an express app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeroentvb/express-starter.git"
+  },
+  "keywords": [
+    "express",
+    "starter",
+    "template"
+  ],
+  "author": "jeroentvb",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jeroentvb/express-starter/issues"
+  },
+  "homepage": "https://github.com/jeroentvb/express-starter#readme",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "static/*",
+      "README",
+      "docs/*"
+    ]
+  }
+}
