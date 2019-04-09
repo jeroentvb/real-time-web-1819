@@ -1,5 +1,4 @@
 const app = require('express')
-const http = require('http').Server(app)
 
 const server = app()
   .set('view engine', 'ejs')
@@ -21,7 +20,17 @@ function index (req, res) {
 }
 
 io.on('connection', socket => {
-  console.log('a user connected')
+  console.log('an user connected')
+
+  socket.on('chat message', msg => {
+    console.log('message: ' + msg)
+
+    io.emit('chat message', msg)
+  })
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected')
+  })
 })
 
 function notFound (req, res) {
