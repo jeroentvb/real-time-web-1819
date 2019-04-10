@@ -1,4 +1,5 @@
 const app = require('express')
+const helper = require('./partials/helper')
 
 const server = app()
   .set('view engine', 'ejs')
@@ -25,7 +26,11 @@ io.on('connection', socket => {
   socket.on('chat message', msg => {
     console.log('message: ' + msg)
 
-    io.emit('chat message', msg)
+    if (msg === '/background') {
+      io.emit('command background', helper.randomColor())
+    } else {
+      io.emit('chat message', msg)
+    }
   })
 
   socket.on('disconnect', () => {
