@@ -1,0 +1,43 @@
+{
+  "name": "pokemon-fight",
+  "version": "0.1.0",
+  "description": "A multiplayer pokemon fight",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeroentvb/pokemon.git"
+  },
+  "keywords": [
+    "express",
+    "starter",
+    "template"
+  ],
+  "author": "jeroentvb",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jeroentvb/pokemon/issues"
+  },
+  "homepage": "https://github.com/jeroentvb/pokemon#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "dotenv": "^7.0.0",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "express-session": "^1.16.1",
+    "express-socket.io-session": "^1.3.5",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "static/*",
+      "README",
+      "docs/*"
+    ]
+  }
+}
