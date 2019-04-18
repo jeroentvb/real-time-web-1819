@@ -1,0 +1,35 @@
+body {
+  font-family: 'system-ui', sans-serif;
+  font-size: 1rem;
+  margin: 0;
+  padding: 1rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 1rem;
+}
+
+input[type=text], input[type=number] {
+  font-size: 1rem;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+input[type=submit] {
+  appearance: none;
+  -webkit-appearance: none;
+  font-size: 1rem;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+}
+
+.hidden {
+  display: none;
+}

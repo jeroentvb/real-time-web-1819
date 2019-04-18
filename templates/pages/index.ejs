@@ -1,0 +1,26 @@
+<% include ../partials/head %>
+
+<main>
+  <h1>Real-time wind data</h1>
+
+  <form>
+    <label for="weight">Weight (in KG)</label>
+    <input id="weight" type="number" name="weight" placeholder="75" min="20" max="160">
+
+    <label for="spot">Spot</label>
+    <input id="spot" type="text" name="spot" placeholder="tarifa">
+
+    <input type="submit" name="submit">
+  </form>
+  <p id="loader"></p>
+
+  <section id="info" class="hidden">
+    <p>The wind speed at <span id="time"></span> was: <span id="windspeed">0</span> kts</p>
+    <p>You should rig a: <span id="sailsize">0</span> m2 sail</p>
+  </section>
+</main>
+
+<script src="/js/socket.io.js"></script>
+<script src="/js/script.js" type="module"></script>
+
+<% include ../partials/tail %>
