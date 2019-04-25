@@ -7,7 +7,9 @@
 * [Data lifecycle](#data-lifecycle)
 
 ## Concept
-Deze applicatie haalt de actuele windsnelheid op en berekent de zeilgrootte die een windsurfer bij de actuele wind zou moeten optuigen. Geïnspireerd door [dit project](https://github.com/RoryMearns/Windsurf_Calculator).
+Deze applicatie haalt de actuele windsnelheid op en berekent de zeilgrootte die een windsurfer bij de actuele wind zou moeten optuigen. Geïnspireerd door [dit project](https://github.com/RoryMearns/Windsurf_Calculator).  
+
+Wanneer een gebruiker data aanvraagt van een spot wordt deze data opgeslagen in een SQL database en wordt er een timer gezet om na 10 minuten nieuwe data op te halen en naar de clients te sturen die op dat moment de data van die spot gebruiken, waarna de data in de databse weer wordt geüpdatet. Wanneer een andere gebruiker data voor dezelfde spot opvraagt wordt deze data uit de database opgehaald.
 
 ![concept schets](bin/schets.jpg)
 
