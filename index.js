@@ -52,23 +52,26 @@ function notFound (req, res) {
 }
 
 const cookie = {
-  set: async (socket, data) => {
-    data.spot = data.spot.toLowerCase()
+  set: (socket, data) => {
+    return new Promise(async (resolve, reject) => {
+      data.spot = data.spot.toLowerCase()
 
-    try {
-      const result = await db.query('INSERT INTO sailPrediction.userData SET spot = ?, weight = ?', [
-        data.spot,
-        data.weight
-      ])
-      const userId = result.insertId
+      try {
+        const result = await db.query('INSERT INTO sailPrediction.userData SET spot = ?, weight = ?', [
+          data.spot,
+          data.weight
+        ])
+        const userId = result.insertId
 
-      socket.handshake.session.userdata = userId
-      socket.handshake.session.save()
+        socket.handshake.session.userdata = userId
+        socket.handshake.session.save()
 
-      console.log('Set a cookie with id' + userId)
-    } catch (err) {
-      console.error(err)
-    }
+        console.log('Set a cookie with id' + userId)
+        resolve(userId)
+      } catch (err) {
+        reject(err)
+      }
+    })
   },
   update: async (socket, data) => {
     const userId = socket.handshake.session.userdata
@@ -100,7 +103,6 @@ const data = {
     if (spotData.length <= 0) {
       try {
         const data = await scrape.report(spot)
-        console.log(data)
         const lastDataPoint = data.report[data.report.length - 1]
 
         socket.join(spot)
@@ -219,7 +221,7 @@ io.on('connection', socket => {
 
   socket.on('spot', async userData => {
     if (!socket.handshake.session.userdata) {
-      cookie.set(socket, userData)
+      await cookie.set(socket, userData)
 
       data.send(socket, userData.spot)
     } else {
