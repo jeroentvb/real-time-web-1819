@@ -13,7 +13,10 @@ const session = expressSession({
   secret: process.env.SESSION_SECRET,
   resave: true,
   saveUninitialized: true,
-  rolling: true
+  rolling: true,
+  cookie: {
+    maxAge: 2592000000
+  }
 })
 
 db.init()
