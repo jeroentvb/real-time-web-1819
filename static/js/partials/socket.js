@@ -1,6 +1,6 @@
 /* global io */
 
-import { update, restore } from '../script.js'
+import { update, restore, showError } from '../script.js'
 
 const socket = io()
 
@@ -12,7 +12,12 @@ socket.on('restore', data => restore(data))
 
 socket.on('data', data => {
   console.log(data)
+  console.log('Received new data')
   update(data)
+})
+
+socket.on('spotmessage', msg => {
+  showError(msg)
 })
 
 function send (eventName, data) {

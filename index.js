@@ -50,6 +50,8 @@ function notFound (req, res) {
 
 const cookie = {
   set: async (socket, data) => {
+    data.spot = data.spot.toLowerCase()
+
     try {
       const result = await db.query('INSERT INTO sailPrediction.userData SET spot = ?, weight = ?', [
         data.spot,
@@ -84,12 +86,26 @@ const cookie = {
 
 const data = {
   send: async (socket, spot) => {
-    const result = await db.query('SELECT * FROM sailPrediction.spotData WHERE spot = ?', spot)
+    spot = spot.toLowerCase()
 
-    if (result.length <= 0) {
+    const userData = await db.query('SELECT * FROM sailPrediction.userData WHERE id = ?', socket.handshake.session.userdata)
+
+    if (userData[0].spot) socket.leave(userData[0].spot)
+
+    const spotData = await db.query('SELECT * FROM sailPrediction.spotData WHERE spot = ?', spot)
+
+    if (spotData.length <= 0) {
       try {
         const data = await scrape.report(spot)
+        console.log(data)
         const lastDataPoint = data.report[data.report.length - 1]
+
+        socket.join(spot)
+
+        io.in(spot).clients((err, clients) => {
+          if (err) throw err
+          if (clients.length === 1) timeout.start(spot)
+        })
 
         socket.emit('data', lastDataPoint)
 
@@ -100,26 +116,92 @@ const data = {
           lastDataPoint.time
         ])
       } catch (err) {
+        socket.emit('spotmessage', `The spot '${spot}' does not exist.`)
         console.error(err)
       }
     } else {
-      socket.emit('data', result[0])
+      socket.join(spot)
+      socket.emit('data', spotData[0])
+    }
+  },
+  update: async spot => {
+    try {
+      const data = await scrape.report(spot)
+      const lastDataPoint = data.report[data.report.length - 1]
+
+      io.to(spot).emit('data', lastDataPoint)
+
+      await db.query('UPDATE sailPrediction.spotData SET windspeed = ?, winddirection = ?, time = ?', [
+        lastDataPoint.windspeed,
+        lastDataPoint.winddirection,
+        lastDataPoint.time
+      ])
+    } catch (err) {
+      console.error(err)
     }
   },
   restore: async socket => {
     try {
       const userData = await db.query('SELECT * FROM sailPrediction.userData WHERE id = ?', socket.handshake.session.userdata)
-      const spotData = await db.query('SELECT * FROM sailPrediction.spotData WHERE spot = ?', userData[0].spot)
+      const spot = userData[0].spot
+      const spotData = await db.query('SELECT * FROM sailPrediction.spotData WHERE spot = ?', spot)
 
-      const data = {
+      const dataObj = {
         ...spotData[0],
         ...userData[0]
       }
 
-      socket.emit('restore', data)
+      socket.join(spot)
+
+      io.in(spot).clients((err, clients) => {
+        if (err) throw err
+        if (clients.length === 1) timeout.start(spot)
+      })
+
+      socket.emit('restore', dataObj)
+
+      // if (new Date() - new Date(dataObj.time) > 600000) {
+      //   let newSpotData = await scrape.report(spot)
+      //   newSpotData = newSpotData.report[newSpotData.report.length - 1]
+      //   const newDataObj = {
+      //     ...newSpotData,
+      //     ...userData[0]
+      //   }
+      //
+      //   socket.emit('restore', newDataObj)
+      // }
     } catch (err) {
       console.error(err)
     }
+  },
+  disconnect: async socket => {
+    const userData = await db.query('SELECT * FROM sailPrediction.userData WHERE id = ?', socket.handshake.session.userdata)
+
+    socket.leave(userData[0].spot)
+  }
+}
+
+const timeout = {
+  trigger: async spot => {
+    console.log('Refreshing spot info!')
+
+    data.update(spot)
+
+    setTimeout(() => {
+      timeout.trigger(spot)
+    }, 600000)
+
+    console.log(`Set a timeout for spot: ${spot}`)
+  },
+  start: spot => {
+    console.log(`Set a timeout for spot: ${spot}`)
+    this.timeout = setTimeout(() => {
+      timeout.trigger(spot)
+    }, 600000)
+  },
+  stop: () => {
+    console.log('Timeout cleared!')
+    clearTimeout(this.timeout)
   }
 }
 
@@ -138,13 +220,21 @@ io.on('connection', socket => {
 
       data.send(socket, userData.spot)
     } else {
-      cookie.update(socket, userData)
-
       data.send(socket, userData.spot)
+
+      cookie.update(socket, userData)
     }
   })
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', async () => {
     console.log('User disconnected')
+
+    const userData = await db.query('SELECT * FROM sailPrediction.userData WHERE id = ?', socket.handshake.session.userdata)
+
+    io.in(userData[0].spot).clients((err, clients) => {
+      if (err) throw err
+      if (clients.length === 0) timeout.stop()
+    })
+    // data.disconnect(socket)
   })
 })
