@@ -21,6 +21,7 @@ Dit is een voorbeeld van een API link, deze zal niet werken wanneer je dit leest
 ## Data lifecycle
 <details>
 <summary>De eerste (getekende) versie van de data lifecycle</summary>
+  
 ![data lifecycle](bin/data-lifecycle-old.jpg)
 </details>
 
