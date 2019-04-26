@@ -1,7 +1,7 @@
 {
-  "name": "real-time-web-1819",
+  "name": "Windsurf Sail Prediction",
   "version": "1.0.0",
-  "description": "During this course you will learn how to build a **meaningful** real-time application. You will learn techniques to setup an open connection between the client and the server. This will enable you to send data in real-time both ways, at the same time.",
+  "description": "Predict a sail size based on real-time wind readings and your weight.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

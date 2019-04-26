@@ -3,12 +3,14 @@
 <main>
   <h1>Real-time wind data</h1>
 
+  <p>Fill in your weight and an existing windfinder spot that has a wind report. For example: <a href="https://www.windfinder.com/report/tarifa">tarifa</a></p>
+
   <form>
     <label for="weight">Weight (in KG)</label>
-    <input id="weight" type="number" name="weight" placeholder="75" min="20" max="160">
+    <input id="weight" type="number" name="weight" placeholder="75" min="20" max="160" required>
 
     <label for="spot">Spot</label>
-    <input id="spot" type="text" name="spot" placeholder="tarifa">
+    <input id="spot" type="text" name="spot" placeholder="tarifa" required>
 
     <input type="submit" name="submit">
   </form>
