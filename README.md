@@ -2,10 +2,38 @@
 > Niets is zo veranderlijk als het weer
 
 ## Inhoud
+* [Installatie](#installatie)
 * [Concept](#concept)
 * [API](#api)
 * [Data lifecycle](#data-lifecycle)
 * [To do](#to-do)
+
+## Installatie
+Voer de volgende commands uit in terminal
+```sh
+git clone https://github.com/jeroentvb/real-time-web-1819.git
+cd real-time-web-1819
+npm install
+touch .env
+```
+
+Vul het `.env` bestand met de volgende informatie:
+```
+SESSION_SECRET=VUL_HIER_JOUW_SECRET_IN
+DB_HOST=localhost
+DB_USER=VUL_HIER_JOUW_DB_USERNAME_IN
+DB_PASSWORD=VUL_HIER_JOUW_DB_PASSWORD_IN
+DB_NAME=sailPrediction
+```
+
+Start de server met
+```sh
+npm start
+
+# of
+
+node index.js
+```
 
 ## Concept
 Deze applicatie haalt de actuele windsnelheid op en berekent de zeilgrootte die een windsurfer bij de actuele wind zou moeten optuigen. Geïnspireerd door [dit project](https://github.com/RoryMearns/Windsurf_Calculator).  
