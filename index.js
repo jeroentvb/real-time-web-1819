@@ -249,12 +249,14 @@ io.on('connection', socket => {
   socket.on('disconnect', async () => {
     console.log('User disconnected')
 
-    const userData = await db.query('SELECT * FROM sailPrediction.userData WHERE id = ?', socket.handshake.session.userdata)
+    if (socket.handshake.session.userdata) {
+      const userData = await db.query('SELECT * FROM sailPrediction.userData WHERE id = ?', socket.handshake.session.userdata)
 
-    io.in(userData[0].spot).clients((err, clients) => {
-      if (err) throw err
-      if (clients.length === 0) timeout.stop()
-    })
+      io.in(userData[0].spot).clients((err, clients) => {
+        if (err) throw err
+        if (clients.length === 0) timeout.stop()
+      })
+    }
     // data.disconnect(socket)
   })
 })
