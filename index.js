@@ -127,6 +127,19 @@ const data = {
     } else {
       socket.join(spot)
       socket.emit('data', spotData[0])
+
+      if (new Date() - new Date(spotData[0].time) > 600000) {
+        let newSpotData = await scrape.report(spot)
+        newSpotData = newSpotData.report[newSpotData.report.length - 1]
+        const newDataObj = {
+          ...newSpotData,
+          ...userData[0]
+        }
+
+        socket.emit('restore', newDataObj)
+
+        data.update(spot)
+      }
     }
   },
   update: async spot => {
@@ -165,16 +178,18 @@ const data = {
 
       socket.emit('restore', dataObj)
 
-      // if (new Date() - new Date(dataObj.time) > 600000) {
-      //   let newSpotData = await scrape.report(spot)
-      //   newSpotData = newSpotData.report[newSpotData.report.length - 1]
-      //   const newDataObj = {
-      //     ...newSpotData,
-      //     ...userData[0]
-      //   }
-      //
-      //   socket.emit('restore', newDataObj)
-      // }
+      if (new Date() - new Date(dataObj.time) > 600000) {
+        let newSpotData = await scrape.report(spot)
+        newSpotData = newSpotData.report[newSpotData.report.length - 1]
+        const newDataObj = {
+          ...newSpotData,
+          ...userData[0]
+        }
+
+        socket.emit('restore', newDataObj)
+
+        data.update(spot)
+      }
     } catch (err) {
       console.error(err)
     }

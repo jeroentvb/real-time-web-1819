@@ -1,7 +1,9 @@
 function getTime (dateStr) {
-  const date = new Date(dateStr)
+  const d = new Date(dateStr)
+  const h = `${d.getHours()}`.padStart(2, '0')
+  const m = `${d.getMinutes()}`.padStart(2, '0')
 
-  return `${date.getHours()}:${date.getMinutes()}`
+  return `${h}:${m}`
 }
 
 function calcSail (weight, windspeed) {
